@@ -53,12 +53,12 @@ void syncMain(void (^block)(void)) {
         self.poolCount = poolCount;
 
         self.produceQueue = dispatch_queue_create([[NSString stringWithFormat:@"nut_pool_produce_queue %@", @(counter)] cStringUsingEncoding:NSASCIIStringEncoding], DISPATCH_QUEUE_CONCURRENT);
-        self.produceSemaphore = dispatch_semaphore_create(0);
+        self.produceSemaphore = dispatch_semaphore_create(poolCount);
 
         self.consumeQueue = [[NSOperationQueue alloc] init];
         self.consumeQueue.maxConcurrentOperationCount = 1;
         self.pendingList = [NSMutableArray array];
-        self.consumeSemaphore = dispatch_semaphore_create(poolCount);
+        self.consumeSemaphore = dispatch_semaphore_create(0);
 
         self.productList = [NSMutableArray array];
         self.productLock = [[NSLock alloc] init];
@@ -72,7 +72,7 @@ void syncMain(void (^block)(void)) {
 - (NutTask *)productTask:(NutProductCallback)callback {
     __block NutTask *task;
     syncMain(^{
-        NutTask *task = [self productTaskOperation:callback];
+        task = [self productTaskOperation:callback];
         [self.pendingList addObject:task];
         [self.consumeQueue addOperation:task];
     });
@@ -84,11 +84,12 @@ void syncMain(void (^block)(void)) {
     NutTask *taskOperation = [[NutTask alloc] init];
     taskOperation.taskName = [[NSUUID UUID] UUIDString];
     
+    __weak __typeof(taskOperation)weakOperation = taskOperation;
     [taskOperation addExecutionBlock:^{
         dispatch_semaphore_wait(self.consumeSemaphore, DISPATCH_TIME_FOREVER);
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([taskOperation isCancelled] && taskOperation.isFinished == false) {
+            if ([weakOperation isCancelled]) {
                 dispatch_semaphore_signal(self.consumeSemaphore);
             } else {
                 [self.productLock lock];
@@ -105,13 +106,6 @@ void syncMain(void (^block)(void)) {
     return taskOperation;
 }
 
-- (void)cancelProductTask:(NutTask *)task {
-    // 任务的状态：正在被添加->已添加(等待商品)->正在派发商品->商品派发完毕完毕
-    syncMain(^{
-        [task cancel];
-        [self.pendingList removeObject:task];
-    });
-}
 
 - (void)start {
     dispatch_async(self.produceQueue, ^{

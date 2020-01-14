@@ -17,8 +17,9 @@
 @end
 
 /// 生产者
-typedef void (^NutProductCallback)(id <NutProduct> product, NSError *error);
+typedef void (^NutProductCallback)(id <NutProduct> product, NSError *error);// 商品生产回调
 
+/// 生产者协议
 @protocol NutProducer <NSObject>
 - (void)produceProduct:(NutProductCallback)callback;
 @end
@@ -36,6 +37,4 @@ typedef void (^NutProductCallback)(id <NutProduct> product, NSError *error);
 - (NutPool *)initWithProducer:(id <NutProducer>)producer poolCount:(NSInteger)poolCount;
 
 - (NutTask *)productTask:(NutProductCallback)callback;
-
-- (void)cancelProductTask:(NutTask *)task;
 @end
