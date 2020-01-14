@@ -20,7 +20,7 @@
 
 // 消费者
 @property(nonatomic, strong) NSOperationQueue *consumeQueue; // 消费任务执行队列（线程,worker）
-@property(nonatomic, strong) NSMutableArray *pendingList;// 正在等待的消费者列表
+@property(nonatomic, strong) NSMutableArray<NutTask *> *pendingList;// 正在等待的消费者列表
 @property(nonatomic, strong) dispatch_semaphore_t consumeSemaphore;// 可消费信号
 
 // 商品
@@ -70,25 +70,25 @@ void syncMain(void (^block)(void)) {
 }
 
 - (NutTask *)productTask:(NutProductCallback)callback {
-    NutTask *task = [[NutTask alloc] init];
-    task.name = [[NSUUID UUID] UUIDString];
-
+    __block NutTask *task;
     syncMain(^{
-        NSBlockOperation *operation = [self productTaskOperation:callback];
-        [self.pendingList addObject:@{task.name: operation}];
-        [self.consumeQueue addOperation:operation];
+        NutTask *task = [self productTaskOperation:callback];
+        [self.pendingList addObject:task];
+        [self.consumeQueue addOperation:task];
     });
 
     return task;
 }
 
-- (NSBlockOperation *)productTaskOperation:(NutProductCallback)callback {
-    NSBlockOperation *operation = [[NSBlockOperation alloc] init];
-    [operation addExecutionBlock:^{
+- (NutTask *)productTaskOperation:(NutProductCallback)callback {
+    NutTask *taskOperation = [[NutTask alloc] init];
+    taskOperation.taskName = [[NSUUID UUID] UUIDString];
+    
+    [taskOperation addExecutionBlock:^{
         dispatch_semaphore_wait(self.consumeSemaphore, DISPATCH_TIME_FOREVER);
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([operation isCancelled] && operation.isFinished == false) {
+            if ([taskOperation isCancelled] && taskOperation.isFinished == false) {
                 dispatch_semaphore_signal(self.consumeSemaphore);
             } else {
                 [self.productLock lock];
@@ -102,23 +102,14 @@ void syncMain(void (^block)(void)) {
         });
     }];
 
-    return operation;
+    return taskOperation;
 }
 
 - (void)cancelProductTask:(NutTask *)task {
     // 任务的状态：正在被添加->已添加(等待商品)->正在派发商品->商品派发完毕完毕
     syncMain(^{
-        __block NSDictionary * findObj = nil;
-        [self.pendingList enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
-            if ([obj.allKeys.firstObject isEqualToString:task.name]) {
-                findObj = obj;
-                *stop = true;
-            }
-        }];
-
-        NSBlockOperation *operation = findObj.allValues.firstObject;
-        [operation cancel];
-        [self.pendingList removeObject:findObj];
+        [task cancel];
+        [self.pendingList removeObject:task];
     });
 }
 

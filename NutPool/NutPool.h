@@ -23,8 +23,8 @@ typedef void (^NutProductCallback)(id <NutProduct> product, NSError *error);
 - (void)produceProduct:(NutProductCallback)callback;
 @end
 
-@interface NutTask : NSObject
-@property(nonatomic, strong) NSString *name;
+@interface NutTask : NSBlockOperation
+@property(nonatomic, strong) NSString *taskName;
 @end
 
 
