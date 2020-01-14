@@ -16,7 +16,7 @@
 		FE35725A23CD5663001DF959 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FE35725923CD5663001DF959 /* main.m */; };
 		FE35726023CD570B001DF959 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE35725F23CD570B001DF959 /* TableViewController.m */; };
 		FE35726423CD5B4B001DF959 /* TestProducer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE35726323CD5B4B001DF959 /* TestProducer.m */; };
-		FE35726723CD5CFD001DF959 /* UITableVieCell+TestProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = FE35726623CD5CFD001DF959 /* UITableVieCell+TestProduct.m */; };
+		FE35726C23CDA347001DF959 /* TestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE35726B23CDA347001DF959 /* TestCell.m */; };
 		FEB6FFC423CC025900E91574 /* NutPool.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB6FFC323CC025900E91574 /* NutPool.m */; };
 		FEB6FFC523CC025900E91574 /* NutPool.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEB6FFC223CC025900E91574 /* NutPool.h */; };
 /* End PBXBuildFile section */
@@ -54,8 +54,8 @@
 		FE35726123CD5798001DF959 /* NutPoolOC.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NutPoolOC.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		FE35726223CD5B4B001DF959 /* TestProducer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestProducer.h; sourceTree = "<group>"; };
 		FE35726323CD5B4B001DF959 /* TestProducer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestProducer.m; sourceTree = "<group>"; };
-		FE35726523CD5CFD001DF959 /* UITableVieCell+TestProduct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITableVieCell+TestProduct.h"; sourceTree = "<group>"; };
-		FE35726623CD5CFD001DF959 /* UITableVieCell+TestProduct.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITableVieCell+TestProduct.m"; sourceTree = "<group>"; };
+		FE35726A23CDA347001DF959 /* TestCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCell.h; sourceTree = "<group>"; };
+		FE35726B23CDA347001DF959 /* TestCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCell.m; sourceTree = "<group>"; };
 		FEB6FFBF23CC025900E91574 /* libNutPool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNutPool.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEB6FFC223CC025900E91574 /* NutPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NutPool.h; sourceTree = "<group>"; };
 		FEB6FFC323CC025900E91574 /* NutPool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NutPool.m; sourceTree = "<group>"; };
@@ -110,13 +110,13 @@
 				FE35725F23CD570B001DF959 /* TableViewController.m */,
 				FE35726223CD5B4B001DF959 /* TestProducer.h */,
 				FE35726323CD5B4B001DF959 /* TestProducer.m */,
-				FE35726523CD5CFD001DF959 /* UITableVieCell+TestProduct.h */,
-				FE35726623CD5CFD001DF959 /* UITableVieCell+TestProduct.m */,
 				FE35725023CD5661001DF959 /* Main.storyboard */,
 				FE35725323CD5663001DF959 /* Assets.xcassets */,
 				FE35725523CD5663001DF959 /* LaunchScreen.storyboard */,
 				FE35725823CD5663001DF959 /* Info.plist */,
 				FE35725923CD5663001DF959 /* main.m */,
+				FE35726A23CDA347001DF959 /* TestCell.h */,
+				FE35726B23CDA347001DF959 /* TestCell.m */,
 			);
 			path = NutPoolDemo;
 			sourceTree = "<group>";
@@ -163,6 +163,7 @@
 				FE35724223CD5661001DF959 /* Frameworks */,
 				FE35724323CD5661001DF959 /* Resources */,
 				752FF46A4C15BBC42598E447 /* [CP] Embed Pods Frameworks */,
+				FE35726923CDA0F9001DF959 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -302,6 +303,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		FE35726923CDA0F9001DF959 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "find \"${SRCROOT}/Pods\" -type f -name \"*frameworks.sh\" -exec touch {} \\;\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -309,7 +327,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE35726723CD5CFD001DF959 /* UITableVieCell+TestProduct.m in Sources */,
+				FE35726C23CDA347001DF959 /* TestCell.m in Sources */,
 				FE35724923CD5661001DF959 /* AppDelegate.m in Sources */,
 				FE35726423CD5B4B001DF959 /* TestProducer.m in Sources */,
 				FE35725A23CD5663001DF959 /* main.m in Sources */,
@@ -355,6 +373,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = TAXNVNJP42;
 				INFOPLIST_FILE = NutPoolDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -373,6 +392,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = TAXNVNJP42;
 				INFOPLIST_FILE = NutPoolDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

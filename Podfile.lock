@@ -1,0 +1,16 @@
+PODS:
+  - NutPoolOC (0.0.1)
+
+DEPENDENCIES:
+  - NutPoolOC (from `./`)
+
+EXTERNAL SOURCES:
+  NutPoolOC:
+    :path: "./"
+
+SPEC CHECKSUMS:
+  NutPoolOC: 264075596bfa5cb88e8aae59559844cb415350c0
+
+PODFILE CHECKSUM: 5361a6d3666aaddd5d8e94c68528eeebaa4f3125
+
+COCOAPODS: 1.8.4
