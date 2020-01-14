@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   spec.name         = "NutPoolOC"
-  spec.version      = "0.0.1"
-  spec.summary      = "A short description of NutPoolOC."
+  spec.version      = "1.0"
+  spec.summary      = "商品池。抽象了生产-消费模型"
   spec.description  = <<-DESC
   NutPool OC Version
                    DESC
